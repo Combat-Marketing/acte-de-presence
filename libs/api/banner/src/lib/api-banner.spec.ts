@@ -1,10 +1,8 @@
+import { FileNoAccessError, FileNotFoundError, FileReadError } from '@acte-de-presence/vfs';
 import { constants } from 'fs';
 import * as fs from 'fs/promises';
 
 import { apiBanner } from './api-banner';
-import { FileNoAccessError } from './file-no-access-error';
-import { FileNotFoundError } from './file-not-found-error';
-import { FileReadError } from './file-read-error';
 
 describe('apiBanner', () => {
   beforeEach(() => {
