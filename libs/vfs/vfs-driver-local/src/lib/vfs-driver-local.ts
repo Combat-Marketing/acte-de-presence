@@ -77,7 +77,7 @@ export class VfsDriverLocal implements VfsDriver {
     if (await this.access(resolvedPath, AccessModes.W_OK) === false) throw new FileNoAccessError(resolvedPath);
 
     try {
-      await fs.rm(resolvedPath);
+      await fs.unlink(resolvedPath);
     } catch(err) {
       throw new FileDeleteError(resolvedPath);
     }
