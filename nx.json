@@ -52,10 +52,10 @@
     "vfs-driver-memory": {
       "tags": ["scope:api"]
     },
-    "vfs-vfs-driver-local": {
+    "vfs-driver-local": {
       "tags": ["scope:api"]
     },
-    "vfs-vfs-driver-zip": {
+    "vfs-driver-zip": {
       "tags": ["scope:api"]
     }
   }
