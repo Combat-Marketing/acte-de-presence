@@ -172,6 +172,38 @@
         }
       }
     },
+    "api-lib-zip": {
+      "root": "libs/api/lib-zip",
+      "sourceRoot": "libs/api/lib-zip/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/api/lib-zip",
+            "tsConfig": "libs/api/lib-zip/tsconfig.lib.json",
+            "packageJson": "libs/api/lib-zip/package.json",
+            "main": "libs/api/lib-zip/src/index.ts",
+            "assets": ["libs/api/lib-zip/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api/lib-zip/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/api/lib-zip"],
+          "options": {
+            "jestConfig": "libs/api/lib-zip/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "api-vfs": {
       "root": "libs/api/vfs",
       "sourceRoot": "libs/api/vfs/src",
@@ -231,6 +263,70 @@
           "outputs": ["coverage/libs/vfs/driver-memory"],
           "options": {
             "jestConfig": "libs/vfs/driver-memory/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "vfs-vfs-driver-local": {
+      "root": "libs/vfs/vfs-driver-local",
+      "sourceRoot": "libs/vfs/vfs-driver-local/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/vfs/vfs-driver-local",
+            "tsConfig": "libs/vfs/vfs-driver-local/tsconfig.lib.json",
+            "packageJson": "libs/vfs/vfs-driver-local/package.json",
+            "main": "libs/vfs/vfs-driver-local/src/index.ts",
+            "assets": ["libs/vfs/vfs-driver-local/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/vfs/vfs-driver-local/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/vfs/vfs-driver-local"],
+          "options": {
+            "jestConfig": "libs/vfs/vfs-driver-local/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "vfs-vfs-driver-zip": {
+      "root": "libs/vfs/vfs-driver-zip",
+      "sourceRoot": "libs/vfs/vfs-driver-zip/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/vfs/vfs-driver-zip",
+            "tsConfig": "libs/vfs/vfs-driver-zip/tsconfig.lib.json",
+            "packageJson": "libs/vfs/vfs-driver-zip/package.json",
+            "main": "libs/vfs/vfs-driver-zip/src/index.ts",
+            "assets": ["libs/vfs/vfs-driver-zip/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/vfs/vfs-driver-zip/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/vfs/vfs-driver-zip"],
+          "options": {
+            "jestConfig": "libs/vfs/vfs-driver-zip/jest.config.js",
             "passWithNoTests": true
           }
         }

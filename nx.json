@@ -43,10 +43,19 @@
     "api-banner": {
       "tags": []
     },
+    "api-lib-zip": {
+      "tags": ["scope:api"]
+    },
     "api-vfs": {
       "tags": ["scope:api"]
     },
     "vfs-driver-memory": {
+      "tags": ["scope:api"]
+    },
+    "vfs-vfs-driver-local": {
+      "tags": ["scope:api"]
+    },
+    "vfs-vfs-driver-zip": {
       "tags": ["scope:api"]
     }
   }

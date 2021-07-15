@@ -1,7 +1,10 @@
 {
   "name": "acte-de-presence",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "license": "MIT",
+  "repository": {
+    "url": "git+https://github.com/Combat-Marketing/acte-de-presence.git"
+  },
   "scripts": {
     "nx": "nx",
     "start": "nx serve",

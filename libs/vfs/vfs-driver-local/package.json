@@ -1,13 +1,13 @@
 {
-  "name": "@acte-de-presence/vfs",
-  "version": "0.0.3",
+  "name": "@acte-de-presence/vfs-driver-local",
+  "version": "0.0.1",
   "license": "MIT",
   "author": {
     "email": "chris@combat.nl",
     "name": "Christiaan Benedictus",
     "url": "https://combat.nl"
   },
-  "homepage": "https://github.com/Combat-Marketing/acte-de-presence/tree/main/libs/api/vfs#readme",
+  "homepage": "https://github.com/Combat-Marketing/acte-de-presence/tree/main/libs/vfs/driver-local#readme",
   "bugs": {
     "url": "https://github.com/Combat-Marketing/acte-de-presence/issues"
   },

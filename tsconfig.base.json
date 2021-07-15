@@ -16,9 +16,16 @@
     "baseUrl": ".",
     "paths": {
       "@acte-de-presence/banner": ["libs/api/banner/src/index.ts"],
+      "@acte-de-presence/lib-zip": ["libs/api/lib-zip/src/index.ts"],
       "@acte-de-presence/vfs": ["libs/api/vfs/src/index.ts"],
+      "@acte-de-presence/vfs-driver-local": [
+        "libs/vfs/vfs-driver-local/src/index.ts"
+      ],
       "@acte-de-presence/vfs-driver-memory": [
         "libs/vfs/driver-memory/src/index.ts"
+      ],
+      "@acte-de-presence/vfs-driver-zip": [
+        "libs/vfs/vfs-driver-zip/src/index.ts"
       ]
     }
   },

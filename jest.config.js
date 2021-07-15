@@ -7,5 +7,8 @@ module.exports = {
     '<rootDir>/apps/api',
     '<rootDir>/libs/api/vfs',
     '<rootDir>/libs/vfs/driver-memory',
+    '<rootDir>/libs/vfs/vfs-driver-local',
+    '<rootDir>/libs/vfs/vfs-driver-zip',
+    '<rootDir>/libs/api/lib-zip',
   ],
 };
