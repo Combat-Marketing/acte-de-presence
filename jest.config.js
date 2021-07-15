@@ -6,5 +6,6 @@ module.exports = {
     '<rootDir>/apps/admin',
     '<rootDir>/apps/api',
     '<rootDir>/libs/api/vfs',
+    '<rootDir>/libs/vfs/driver-memory',
   ],
 };

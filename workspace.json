@@ -203,6 +203,38 @@
           }
         }
       }
+    },
+    "vfs-driver-memory": {
+      "root": "libs/vfs/driver-memory",
+      "sourceRoot": "libs/vfs/driver-memory/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/vfs/driver-memory",
+            "tsConfig": "libs/vfs/driver-memory/tsconfig.lib.json",
+            "packageJson": "libs/vfs/driver-memory/package.json",
+            "main": "libs/vfs/driver-memory/src/index.ts",
+            "assets": ["libs/vfs/driver-memory/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/vfs/driver-memory/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/vfs/driver-memory"],
+          "options": {
+            "jestConfig": "libs/vfs/driver-memory/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

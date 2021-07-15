@@ -16,7 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "@acte-de-presence/banner": ["libs/api/banner/src/index.ts"],
-      "@acte-de-presence/vfs": ["libs/api/vfs/src/index.ts"]
+      "@acte-de-presence/vfs": ["libs/api/vfs/src/index.ts"],
+      "@acte-de-presence/vfs-driver-memory": [
+        "libs/vfs/driver-memory/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

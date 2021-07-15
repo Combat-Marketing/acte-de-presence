@@ -45,6 +45,9 @@
     },
     "api-vfs": {
       "tags": ["scope:api"]
+    },
+    "vfs-driver-memory": {
+      "tags": ["scope:api"]
     }
   }
 }
