@@ -29,37 +29,24 @@
       }
     ]
   },
-  "projects": {
-    "admin": {
-      "tags": []
-    },
-    "admin-e2e": {
-      "tags": [],
-      "implicitDependencies": ["admin"]
-    },
-    "api": {
-      "tags": []
-    },
-    "api-banner": {
-      "tags": []
-    },
-    "api-lib-zip": {
-      "tags": ["scope:api"]
-    },
-    "api-utils": {
-      "tags": []
-    },
-    "api-vfs": {
-      "tags": ["scope:api"]
-    },
-    "vfs-driver-local": {
-      "tags": ["scope:api"]
-    },
-    "vfs-driver-memory": {
-      "tags": ["scope:api"]
-    },
-    "vfs-driver-zip": {
-      "tags": ["scope:api"]
+  "cli": {
+    "defaultCollection": "@nrwl/react"
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "scss",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "scss"
+      },
+      "library": {
+        "style": "scss",
+        "linter": "eslint"
+      }
     }
-  }
+  },
+  "defaultProject": "admin"
 }
