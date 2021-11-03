@@ -17,6 +17,7 @@
     "paths": {
       "@acte-de-presence/banner": ["libs/api/banner/src/index.ts"],
       "@acte-de-presence/lib-zip": ["libs/api/lib-zip/src/index.ts"],
+      "@acte-de-presence/utils": ["libs/api/utils/src/index.ts"],
       "@acte-de-presence/vfs": ["libs/api/vfs/src/index.ts"],
       "@acte-de-presence/vfs-driver-local": [
         "libs/vfs/vfs-driver-local/src/index.ts"

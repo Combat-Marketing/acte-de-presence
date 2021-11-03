@@ -1,7 +1,8 @@
-import { libZip } from './lib-zip';
+import { unzip } from './lib-zip';
 
 describe('libZip', () => {
-  it('should work', () => {
-    expect(libZip()).toEqual('lib-zip');
+  it('should be able to unzip a zip-file', async () => {
+    const files = unzip("test.zip");
+
   });
 });

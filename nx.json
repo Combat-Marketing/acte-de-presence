@@ -46,13 +46,16 @@
     "api-lib-zip": {
       "tags": ["scope:api"]
     },
+    "api-utils": {
+      "tags": []
+    },
     "api-vfs": {
       "tags": ["scope:api"]
     },
-    "vfs-driver-memory": {
+    "vfs-driver-local": {
       "tags": ["scope:api"]
     },
-    "vfs-driver-local": {
+    "vfs-driver-memory": {
       "tags": ["scope:api"]
     },
     "vfs-driver-zip": {

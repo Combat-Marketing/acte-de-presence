@@ -1,3 +1,6 @@
-export function libZip(): string {
-  return 'lib-zip';
+import {readFile} from 'fs/promises';
+
+export async function unzip(file: string): Promise<string[]> {
+
+  return [''];
 }

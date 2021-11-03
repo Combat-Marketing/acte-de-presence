@@ -10,5 +10,6 @@ module.exports = {
     '<rootDir>/libs/vfs/vfs-driver-local',
     '<rootDir>/libs/vfs/vfs-driver-zip',
     '<rootDir>/libs/api/lib-zip',
+    '<rootDir>/libs/api/utils',
   ],
 };
