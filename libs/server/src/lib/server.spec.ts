@@ -1,7 +1,8 @@
-import { server } from './server';
+import { Server } from './server';
 
 describe('server', () => {
   it('should work', () => {
-    expect(server()).toEqual('server');
+    const server = new Server();
+    expect(server).toBeDefined();
   });
 });
