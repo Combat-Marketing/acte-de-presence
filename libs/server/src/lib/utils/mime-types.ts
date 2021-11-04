@@ -70,7 +70,6 @@ export class MimeTypes {
     let mime = value.indexOf('/') === -1 ? this.lookup(value) : value;
 
     if (!mime) {
-      console.error('No mime found');
       return false;
     }
 
