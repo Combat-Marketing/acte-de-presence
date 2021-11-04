@@ -1,11 +1,14 @@
 import { AccessModes } from './access-modes';
-import { FileDeleteError, FileNotFoundError, FileReadError, FileWriteError } from './errors';
+import {
+  FileDeleteError,
+  FileNotFoundError,
+  FileReadError,
+  FileWriteError,
+} from './errors';
 import { VfsDriver } from './vfs-driver-interface';
 
-
-
 export class VFS {
-  private registeredDrivers: {priority: number, driver: VfsDriver}[] = [];
+  private registeredDrivers: { priority: number; driver: VfsDriver }[] = [];
   private fileDriverCache: Record<string, number> = {};
 
   /**
@@ -17,7 +20,7 @@ export class VFS {
   public use(driver: VfsDriver, priority = 0): this {
     this.registeredDrivers.push({
       priority,
-      driver
+      driver,
     });
     this.registeredDrivers.sort((a, b) => b.priority - a.priority);
     return this;
@@ -38,7 +41,7 @@ export class VFS {
     for (const idx in this.registeredDrivers) {
       if (await this.registeredDrivers[idx].driver.exists(path)) {
         this.setCachedDriver(path, parseInt(idx));
-        console.log(`Cached drivers`, this.fileDriverCache)
+
         return true;
       }
     }
@@ -76,9 +79,8 @@ export class VFS {
    */
   public async read(path: string): Promise<Buffer> {
     if (await this.exists(path)) {
-      console.log("FILE EXISTS")
       const cachedDriver = this.getCachedDriver(path);
-      console.log(`Driver: ${cachedDriver.constructor.name}`)
+
       if (cachedDriver) {
         return await cachedDriver.read(path);
       }
@@ -118,7 +120,7 @@ export class VFS {
       const driver = this.getCachedDriver(path);
       try {
         await driver.delete(path);
-      } catch(err) {
+      } catch (err) {
         throw new FileDeleteError(path);
       }
     } else {
@@ -133,7 +135,6 @@ export class VFS {
    */
   private getCachedDriver(path: string): VfsDriver | null {
     if (path in this.fileDriverCache) {
-      console.log(`Cache not found for: ${path}`)
       const index = this.fileDriverCache[`${path}`];
       return this.registeredDrivers[index].driver;
     }
@@ -144,17 +145,3 @@ export class VFS {
     this.fileDriverCache[`${path}`] = driverIndex;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
