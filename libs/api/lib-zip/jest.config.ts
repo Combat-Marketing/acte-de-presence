@@ -1,5 +1,6 @@
-module.exports = {
-  displayName: 'vfs-vfs-driver-zip',
+/* eslint-disable */
+export default {
+  displayName: 'api-lib-zip',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -11,5 +12,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/vfs/vfs-driver-zip',
+  coverageDirectory: '../../../coverage/libs/api/lib-zip',
 };

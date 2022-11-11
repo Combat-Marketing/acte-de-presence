@@ -1,4 +1,44 @@
 {
   "name": "@acte-de-presence/lib-zip",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nrwl/node:package",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "dist/libs/api/lib-zip",
+          "tsConfig": "libs/api/lib-zip/tsconfig.lib.json",
+          "packageJson": "libs/api/lib-zip/package.json",
+          "main": "libs/api/lib-zip/src/index.ts",
+          "assets": [
+            "libs/api/lib-zip/*.md"
+          ]
+        }
+      },
+      "lint": {
+        "executor": "@nrwl/linter:eslint",
+        "options": {
+          "lintFilePatterns": [
+            "libs/api/lib-zip/**/*.ts"
+          ]
+        },
+        "outputs": [
+          "{options.outputFile}"
+        ]
+      },
+      "test": {
+        "executor": "@nrwl/jest:jest",
+        "outputs": [
+          "{workspaceRoot}/coverage/libs/api/lib-zip"
+        ],
+        "options": {
+          "jestConfig": "libs/api/lib-zip/jest.config.js",
+          "passWithNoTests": true
+        }
+      }
+    }
+  }
 }

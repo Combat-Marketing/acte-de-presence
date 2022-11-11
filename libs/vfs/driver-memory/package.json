@@ -14,5 +14,45 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Combat-Marketing/acte-de-presence.git"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nrwl/node:package",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "dist/libs/vfs/driver-memory",
+          "tsConfig": "libs/vfs/driver-memory/tsconfig.lib.json",
+          "packageJson": "libs/vfs/driver-memory/package.json",
+          "main": "libs/vfs/driver-memory/src/index.ts",
+          "assets": [
+            "libs/vfs/driver-memory/*.md"
+          ]
+        }
+      },
+      "lint": {
+        "executor": "@nrwl/linter:eslint",
+        "options": {
+          "lintFilePatterns": [
+            "libs/vfs/driver-memory/**/*.ts"
+          ]
+        },
+        "outputs": [
+          "{options.outputFile}"
+        ]
+      },
+      "test": {
+        "executor": "@nrwl/jest:jest",
+        "outputs": [
+          "{workspaceRoot}/coverage/libs/vfs/driver-memory"
+        ],
+        "options": {
+          "jestConfig": "libs/vfs/driver-memory/jest.config.js",
+          "passWithNoTests": true
+        }
+      }
+    }
   }
 }

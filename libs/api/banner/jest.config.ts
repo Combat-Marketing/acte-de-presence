@@ -1,5 +1,6 @@
-module.exports = {
-  displayName: 'api-vfs',
+/* eslint-disable */
+export default {
+  displayName: 'api-banner',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -11,5 +12,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/api/vfs',
+  coverageDirectory: '../../../coverage/libs/api/banner',
 };

@@ -1,4 +1,44 @@
 {
   "name": "@acte-de-presence/server",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nrwl/node:package",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "dist/libs/server",
+          "tsConfig": "libs/server/tsconfig.lib.json",
+          "packageJson": "libs/server/package.json",
+          "main": "libs/server/src/index.ts",
+          "assets": [
+            "libs/server/*.md"
+          ]
+        }
+      },
+      "lint": {
+        "executor": "@nrwl/linter:eslint",
+        "outputs": [
+          "{options.outputFile}"
+        ],
+        "options": {
+          "lintFilePatterns": [
+            "libs/server/**/*.ts"
+          ]
+        }
+      },
+      "test": {
+        "executor": "@nrwl/jest:jest",
+        "outputs": [
+          "{workspaceRoot}/coverage/libs/server"
+        ],
+        "options": {
+          "jestConfig": "libs/server/jest.config.js",
+          "passWithNoTests": true
+        }
+      }
+    }
+  }
 }

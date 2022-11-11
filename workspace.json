@@ -7,16 +7,23 @@
       "projectType": "application",
       "targets": {
         "build": {
-          "executor": "@nrwl/web:build",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/webpack:webpack",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/admin",
             "index": "apps/admin/src/index.html",
             "main": "apps/admin/src/main.tsx",
             "polyfills": "apps/admin/src/polyfills.ts",
             "tsConfig": "apps/admin/tsconfig.app.json",
-            "assets": ["apps/admin/src/favicon.ico", "apps/admin/src/assets"],
-            "styles": ["apps/admin/src/styles.scss"],
+            "assets": [
+              "apps/admin/src/favicon.ico",
+              "apps/admin/src/assets"
+            ],
+            "styles": [
+              "apps/admin/src/styles.scss"
+            ],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"
           },
@@ -46,7 +53,7 @@
           }
         },
         "serve": {
-          "executor": "@nrwl/web:dev-server",
+          "executor": "@nrwl/webpack:dev-server",
           "options": {
             "buildTarget": "admin:build",
             "hmr": true,
@@ -56,21 +63,31 @@
             "production": {
               "buildTarget": "admin:build:production",
               "hmr": false
+            },
+            "development": {
+              "buildTarget": "admin:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/admin/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": [
+              "apps/admin/**/*.{ts,tsx,js,jsx}"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/admin"],
+          "outputs": [
+            "coverage/apps/admin"
+          ],
           "options": {
-            "jestConfig": "apps/admin/jest.config.js",
+            "jestConfig": "apps/admin/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -98,13 +115,19 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/admin-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/admin-e2e/**/*.{js,ts}"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         }
       },
       "tags": [],
-      "implicitDependencies": ["admin"]
+      "implicitDependencies": [
+        "admin"
+      ]
     },
     "api": {
       "root": "apps/api",
@@ -112,13 +135,19 @@
       "projectType": "application",
       "targets": {
         "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/webpack:webpack",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/api",
             "main": "apps/api/src/main.ts",
             "tsConfig": "apps/api/tsconfig.app.json",
-            "assets": ["apps/api/src/assets"]
+            "assets": [
+              "apps/api/src/assets"
+            ],
+            "target": "node",
+            "compiler": "tsc"
           },
           "configurations": {
             "production": {
@@ -135,7 +164,7 @@
           }
         },
         "serve": {
-          "executor": "@nrwl/node:execute",
+          "executor": "@nrwl/node:node",
           "options": {
             "buildTarget": "api:build"
           }
@@ -143,15 +172,21 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/api/**/*.ts"]
+            "lintFilePatterns": [
+              "apps/api/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/api"],
+          "outputs": [
+            "coverage/apps/api"
+          ],
           "options": {
-            "jestConfig": "apps/api/jest.config.js",
+            "jestConfig": "apps/api/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -166,15 +201,21 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/api/banner/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/api/banner/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/api/banner"],
+          "outputs": [
+            "coverage/libs/api/banner"
+          ],
           "options": {
-            "jestConfig": "libs/api/banner/jest.config.js",
+            "jestConfig": "libs/api/banner/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -187,33 +228,45 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/js:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/api/lib-zip",
             "tsConfig": "libs/api/lib-zip/tsconfig.lib.json",
             "packageJson": "libs/api/lib-zip/package.json",
             "main": "libs/api/lib-zip/src/index.ts",
-            "assets": ["libs/api/lib-zip/*.md"]
+            "assets": [
+              "libs/api/lib-zip/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/api/lib-zip/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/api/lib-zip/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/api/lib-zip"],
+          "outputs": [
+            "coverage/libs/api/lib-zip"
+          ],
           "options": {
-            "jestConfig": "libs/api/lib-zip/jest.config.js",
+            "jestConfig": "libs/api/lib-zip/jest.config.ts",
             "passWithNoTests": true
           }
         }
       },
-      "tags": ["scope:api"]
+      "tags": [
+        "scope:api"
+      ]
     },
     "api-utils": {
       "root": "libs/api/utils",
@@ -221,28 +274,38 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/js:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/api/utils",
             "tsConfig": "libs/api/utils/tsconfig.lib.json",
             "packageJson": "libs/api/utils/package.json",
             "main": "libs/api/utils/src/index.ts",
-            "assets": ["libs/api/utils/*.md"]
+            "assets": [
+              "libs/api/utils/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/api/utils/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/api/utils/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/api/utils"],
+          "outputs": [
+            "coverage/libs/api/utils"
+          ],
           "options": {
-            "jestConfig": "libs/api/utils/jest.config.js",
+            "jestConfig": "libs/api/utils/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -255,33 +318,45 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/js:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/api/vfs",
             "tsConfig": "libs/api/vfs/tsconfig.lib.json",
             "packageJson": "libs/api/vfs/package.json",
             "main": "libs/api/vfs/src/index.ts",
-            "assets": ["libs/api/vfs/*.md"]
+            "assets": [
+              "libs/api/vfs/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/api/vfs/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/api/vfs/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/api/vfs"],
+          "outputs": [
+            "coverage/libs/api/vfs"
+          ],
           "options": {
-            "jestConfig": "libs/api/vfs/jest.config.js",
+            "jestConfig": "libs/api/vfs/jest.config.ts",
             "passWithNoTests": true
           }
         }
       },
-      "tags": ["scope:api"]
+      "tags": [
+        "scope:api"
+      ]
     },
     "server": {
       "root": "libs/server",
@@ -289,28 +364,38 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/js:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/server",
             "tsConfig": "libs/server/tsconfig.lib.json",
             "packageJson": "libs/server/package.json",
             "main": "libs/server/src/index.ts",
-            "assets": ["libs/server/*.md"]
+            "assets": [
+              "libs/server/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["libs/server/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/server/**/*.ts"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/server"],
+          "outputs": [
+            "coverage/libs/server"
+          ],
           "options": {
-            "jestConfig": "libs/server/jest.config.js",
+            "jestConfig": "libs/server/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -323,33 +408,45 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/js:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/vfs/driver-local",
             "tsConfig": "libs/vfs/driver-local/tsconfig.lib.json",
             "packageJson": "libs/vfs/driver-local/package.json",
             "main": "libs/vfs/driver-local/src/index.ts",
-            "assets": ["libs/vfs/driver-local/*.md"]
+            "assets": [
+              "libs/vfs/driver-local/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/vfs/driver-local/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/vfs/driver-local/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/vfs/driver-local"],
+          "outputs": [
+            "coverage/libs/vfs/driver-local"
+          ],
           "options": {
-            "jestConfig": "libs/vfs/driver-local/jest.config.js",
+            "jestConfig": "libs/vfs/driver-local/jest.config.ts",
             "passWithNoTests": true
           }
         }
       },
-      "tags": ["scope:api"]
+      "tags": [
+        "scope:api"
+      ]
     },
     "vfs-driver-memory": {
       "root": "libs/vfs/driver-memory",
@@ -357,33 +454,45 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/js:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/vfs/driver-memory",
             "tsConfig": "libs/vfs/driver-memory/tsconfig.lib.json",
             "packageJson": "libs/vfs/driver-memory/package.json",
             "main": "libs/vfs/driver-memory/src/index.ts",
-            "assets": ["libs/vfs/driver-memory/*.md"]
+            "assets": [
+              "libs/vfs/driver-memory/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/vfs/driver-memory/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/vfs/driver-memory/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/vfs/driver-memory"],
+          "outputs": [
+            "coverage/libs/vfs/driver-memory"
+          ],
           "options": {
-            "jestConfig": "libs/vfs/driver-memory/jest.config.js",
+            "jestConfig": "libs/vfs/driver-memory/jest.config.ts",
             "passWithNoTests": true
           }
         }
       },
-      "tags": ["scope:api"]
+      "tags": [
+        "scope:api"
+      ]
     },
     "vfs-driver-zip": {
       "root": "libs/vfs/driver-zip",
@@ -391,33 +500,46 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/node:package",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/js:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/vfs/driver-zip",
             "tsConfig": "libs/vfs/driver-zip/tsconfig.lib.json",
             "packageJson": "libs/vfs/driver-zip/package.json",
             "main": "libs/vfs/driver-zip/src/index.ts",
-            "assets": ["libs/vfs/driver-zip/*.md"]
+            "assets": [
+              "libs/vfs/driver-zip/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/vfs/driver-zip/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/vfs/driver-zip/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/vfs/driver-zip"],
+          "outputs": [
+            "coverage/libs/vfs/driver-zip"
+          ],
           "options": {
-            "jestConfig": "libs/vfs/driver-zip/jest.config.js",
+            "jestConfig": "libs/vfs/driver-zip/jest.config.ts",
             "passWithNoTests": true
           }
         }
       },
-      "tags": ["scope:api"]
+      "tags": [
+        "scope:api"
+      ]
     }
-  }
+  },
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json"
 }

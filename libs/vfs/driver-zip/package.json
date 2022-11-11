@@ -1,4 +1,44 @@
 {
   "name": "@acte-de-presence/vfs-driver-zip",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nrwl/node:package",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "dist/libs/vfs/driver-zip",
+          "tsConfig": "libs/vfs/driver-zip/tsconfig.lib.json",
+          "packageJson": "libs/vfs/driver-zip/package.json",
+          "main": "libs/vfs/driver-zip/src/index.ts",
+          "assets": [
+            "libs/vfs/driver-zip/*.md"
+          ]
+        }
+      },
+      "lint": {
+        "executor": "@nrwl/linter:eslint",
+        "options": {
+          "lintFilePatterns": [
+            "libs/vfs/driver-zip/**/*.ts"
+          ]
+        },
+        "outputs": [
+          "{options.outputFile}"
+        ]
+      },
+      "test": {
+        "executor": "@nrwl/jest:jest",
+        "outputs": [
+          "{workspaceRoot}/coverage/libs/vfs/driver-zip"
+        ],
+        "options": {
+          "jestConfig": "libs/vfs/driver-zip/jest.config.js",
+          "passWithNoTests": true
+        }
+      }
+    }
+  }
 }
