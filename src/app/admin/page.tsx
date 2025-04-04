@@ -1,5 +1,5 @@
 import { metadata } from "@/app/admin/layout";
-import { auth } from "@/app/auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export default async function AdminPage() {

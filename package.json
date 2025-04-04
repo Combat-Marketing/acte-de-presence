@@ -2,15 +2,20 @@
   "name": "acte-de-presence",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:generate": "npx prisma generate",
-    "prisma:migrate": "npx prisma migrate dev",
-    "prisma:migrate:prod": "npx prisma migrate deploy",
+    "prisma:generate": "npx prisma generate --schema=prisma/schema",
+    "prisma:migrate": "npx prisma migrate dev --schema=prisma/schema",
+    "prisma:migrate:prod": "npx prisma migrate deploy --schema=prisma/schema",
+    "prisma:seed": "npx prisma db seed --schema=prisma/schema",
     "prisma:studio": "npx prisma studio"
+  },
+  "prisma": {
+    "seed": "node --loader ts-node/esm prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.8.0",
@@ -32,6 +37,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
