@@ -1,6 +1,7 @@
 import { metadata } from "@/app/admin/layout";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import SideMenu from "./components/side-menu";
 
 export default async function AdminPage() {
     metadata.title += " - Dashboard";
@@ -10,8 +11,8 @@ export default async function AdminPage() {
     }
     
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
-            <h1>Dashboard</h1>
+        <div className="flex h-screen overflow-hidden">
+            <SideMenu />
         </div>
     )
 }
