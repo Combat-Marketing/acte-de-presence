@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Accordion from "./components/accordion";
 import SideMenu from "./components/side-menu";
+import ResizableContainer from "./components/resizable-container";
 
 export default async function AdminPage() {
     metadata.title += " - Dashboard";
@@ -14,7 +15,7 @@ export default async function AdminPage() {
     return (
         <div className="flex h-screen overflow-hidden">
             <SideMenu />
-            <div className="w-64  h-full bg-gray-100">
+            <ResizableContainer>
             <Accordion items={[{
                 id: "documents",
                 title: "Documents",
@@ -28,7 +29,7 @@ export default async function AdminPage() {
                 title: "Data Objects",
                 content: <div>Data Objects</div>
                 }]} />
-            </div>
+            </ResizableContainer>
             <div className="flex-1 bg-gray-100">
                 <h1>Dashboard</h1>
             </div>
