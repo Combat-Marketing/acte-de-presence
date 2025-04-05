@@ -9,10 +9,13 @@ export default async function AdminPage() {
     if (!session) {
         redirect("/admin/login");
     }
-    
+
     return (
         <div className="flex h-screen overflow-hidden">
             <SideMenu />
+            <div className="flex-1 bg-gray-100">
+                <h1>Dashboard</h1>
+            </div>
         </div>
     )
 }
