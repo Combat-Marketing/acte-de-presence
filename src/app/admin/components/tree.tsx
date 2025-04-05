@@ -19,7 +19,7 @@ type TreeItem<NT = unknown> = {
  * 
  * @param T - The type of the node data.
  */
-type TreeNode<T = unknown> = {
+export type TreeNode<T = unknown> = {
     id: number;
     type: T;
     path: string;
@@ -41,8 +41,8 @@ export interface TreeProps<NT> {
     type: string;
     nodes: TreeNode<NT>[];
     selectedNodeId: string | null;
-    getIcon: (type: string) => React.ReactNode;
-    contectMenuItems: {
+    getIcon: (type: NT) => React.ReactNode;
+    contextMenuItems: {
         label: string;
         action: () => void;
     }[];
@@ -61,7 +61,7 @@ interface ContextMenuState {
 }
 
 export default function Tree<NT>({
-    type, nodes, selectedNodeId, onNodeSelect, getIcon, onNodeReorder, onNodeDelete, onNodeCreate, onNodeOpen
+    type, nodes, selectedNodeId, contextMenuItems, onNodeSelect, getIcon, onNodeReorder, onNodeDelete, onNodeCreate, onNodeOpen
 }: TreeProps<NT>) {
     const treeRef = useRef<HTMLDivElement>(null);
     const [expandedNodes, setExpandedNodes] = useState<Set<number>>(new Set());
@@ -145,8 +145,8 @@ export default function Tree<NT>({
                     ) : (
                         <div className="w-6" />
                     )}
-                    <div className="flex items-center gap-1 flex-1">
-                        {getIcon(node.type as string)}
+                    <div className="flex items-center gap-1 flex-1 overflow-ellipsis">
+                        {getIcon(node.type)}
                         <span className="flex-1">{node.key}</span>
                         {!!onNodeOpen && (
                             <button
