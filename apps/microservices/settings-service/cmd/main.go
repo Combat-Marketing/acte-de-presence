@@ -23,7 +23,7 @@ func main() {
 	serviceAddress := "settings-service"
 	servicePort := 5004
 
-	err = consulClient.RegisterService(serviceID, serviceName, serviceAddress, servicePort)
+	err = consulClient.RegisterService(serviceID, serviceName, serviceAddress, servicePort, "settings")
 	if err != nil {
 		log.Fatalf("Failed to register service: %v", err)
 	}

@@ -23,7 +23,7 @@ func main() {
 	serviceAddress := "cms-service"
 	servicePort := 5001
 
-	err = consulClient.RegisterService(serviceID, serviceName, serviceAddress, servicePort)
+	err = consulClient.RegisterService(serviceID, serviceName, serviceAddress, servicePort, "cms")
 	if err != nil {
 		log.Fatalf("Failed to register service: %v", err)
 	}

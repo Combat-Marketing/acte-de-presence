@@ -19,11 +19,11 @@ func main() {
 	}
 
 	serviceID := "auth-service"
-	serviceName := "ACP Authentication Service"
+	serviceName := "auth-service"
 	serviceAddress := "auth-service"
 	servicePort := 5002
 
-	err = consulClient.RegisterService(serviceID, serviceName, serviceAddress, servicePort)
+	err = consulClient.RegisterService(serviceID, serviceName, serviceAddress, servicePort, "auth")
 	if err != nil {
 		log.Fatalf("Failed to register service: %v", err)
 	}

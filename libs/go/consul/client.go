@@ -30,12 +30,21 @@ func NewClient(address string) (*Client, error) {
 // The address is the address of the service.
 // The port is the port of the service.
 // Returns any error that occurred during registration.
-func (c *Client) RegisterService(serviceID, serviceName, address string, port int) error {
+func (c *Client) RegisterService(serviceID, serviceName, address string, port int, endpoint string) error {
 	registration := &api.AgentServiceRegistration{
 		ID:      serviceID,
 		Name:    serviceName,
 		Address: address,
 		Port:    port,
+		Tags: []string{
+			"traefik.enable=true",
+			fmt.Sprintf("traefik.http.routers.%s.rule=PathPrefix(`/%s`)", serviceID, endpoint),
+			fmt.Sprintf("traefik.http.routers.%s.entrypoints=web", serviceID),
+			// fmt.Sprintf("traefik.http.services.%s.service=%s", serviceID, serviceID),
+			fmt.Sprintf("traefik.http.middlewares.%s-strip.stripPrefix.prefixes=/%s", serviceID, endpoint),
+			fmt.Sprintf("traefik.http.middlewares.%s-strip.stripPrefix.forceSlash=false", serviceID),
+			fmt.Sprintf("traefik.http.routers.%s.middlewares=%s-strip", serviceID, serviceID),
+		},
 		Check: &api.AgentServiceCheck{
 			HTTP:     fmt.Sprintf("http://%s:%d/health", address, port),
 			Interval: "10s",

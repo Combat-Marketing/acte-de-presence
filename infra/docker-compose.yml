@@ -5,24 +5,31 @@ services:
     container_name: api-gateway
     command:
       - "--api.dashboard=true"
-      - "--api.insecure=true"  # TEMP: allows dashboard access without auth
+      - "--api.insecure=true"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.traefik.address=:9000"
+      - "--entrypoints.dashboard.address=:9000"
       - "--entrypoints.keycloak.address=:8082"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--providers.consulcatalog=true"
+      - "--providers.consulcatalog.endpoint.address=consul:8500"
+      - "--providers.consulcatalog.prefix=traefik"
+      - "--providers.consulcatalog.exposedByDefault=false"
+
     ports:
       - "8080:80"      # Proxy/API entrypoint
       - "9000:9000"    # Dashboard entrypoint
       - "8082:8082"    # Keycloak entrypoint
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`localhost`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.entrypoints=dashboard"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
-      - cms-service
-      - auth-service
-      - documents-service
-      - settings-service
       - keycloak
+      - consul
     networks:
       - acte_de_presence_net 
 
@@ -32,12 +39,6 @@ services:
       dockerfile: apps/microservices/cms-service/Dockerfile
     env_file:
       - ../config/local.env
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.cms.rule=PathPrefix(`/cms`)"
-      - "traefik.http.middlewares.cms-strip-prefix.stripPrefix.prefixes=/cms"
-      - "traefik.http.routers.cms.middlewares=cms-strip-prefix"
-      - "traefik.http.services.cms.loadbalancer.server.port=5001"
     depends_on:
       - consul
       - postgres
@@ -51,12 +52,12 @@ services:
       dockerfile: apps/microservices/auth-service/Dockerfile
     env_file:
       - ../config/local.env
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.auth.rule=PathPrefix(`/auth`)"
-      - "traefik.http.middlewares.auth-strip-prefix.stripPrefix.prefixes=/auth"
-      - "traefik.http.routers.auth.middlewares=auth-strip-prefix"
-      - "traefik.http.services.auth.loadbalancer.server.port=5002"
+    # labels:
+    #   # - "traefik.enable=true"
+    #   # - "traefik.http.routers.auth.rule=PathPrefix(`/auth`)"
+    #   # - "traefik.http.middlewares.auth-strip-prefix.stripPrefix.prefixes=/auth"
+    #   # - "traefik.http.routers.auth.middlewares=auth-strip-prefix"
+    #   # - "traefik.http.services.auth.loadbalancer.server.port=5002"
     depends_on:
       - consul
       - postgres
@@ -71,12 +72,6 @@ services:
       dockerfile: apps/microservices/documents-service/Dockerfile
     env_file:
       - ../config/local.env
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.documents.rule=PathPrefix(`/documents`)"
-      - "traefik.http.middlewares.documents-strip-prefix.stripPrefix.prefixes=/documents"
-      - "traefik.http.routers.documents.middlewares=documents-strip-prefix"
-      - "traefik.http.services.documents.loadbalancer.server.port=5003"
     depends_on:
       - consul
       - postgres
@@ -90,12 +85,6 @@ services:
       dockerfile: apps/microservices/settings-service/Dockerfile
     env_file:
       - ../config/local.env
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.settings.rule=PathPrefix(`/settings`)"
-      - "traefik.http.middlewares.settings-strip-prefix.stripPrefix.prefixes=/settings"
-      - "traefik.http.routers.settings.middlewares=settings-strip-prefix"
-      - "traefik.http.services.settings.loadbalancer.server.port=5004"
     depends_on:
       - consul
       - postgres
