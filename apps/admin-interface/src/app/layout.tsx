@@ -1,9 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import SideMenu from "@/components/side-menu";
 import { auth } from "@/auth";
-import Background from "@/components/ui/background";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -11,11 +10,36 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Acte de Présence Admin",
-  description: "Admin interface for Acte de Présence",
+  title: "Acte de Présence",
+  description: "Acte de Présence",
   icons: {
-    icon: "/admin/favicon.ico",
+      icon: "/img/favicon/favicon.ico",
+      apple: "/img/favicon/apple-touch-icon.png",
+      other: [
+          { rel: "icon", type: "image/png", url: "/img/favicon/favicon.png" },
+          { rel: "icon", type: "image/png", url: "/img/favicon/favicon-32x32.png" },
+          { rel: "icon", type: "image/png", url: "/img/favicon/favicon-16x16.png" },
+      ]
   },
+  manifest: "/img/favicon/site.webmanifest",
+  generator: "Acte de Présence",
+  applicationName: "Acte de Présence",
+  referrer: "strict-origin-when-cross-origin",
+  keywords: ["Acte de Présence", "Acte de Présence", "Acte de Présence"],
+  authors: [{ name: "Combat Jongerenmarketing", url: "https://combat.nl" }],
+  publisher: "Combat Jongerenmarketing",
+  robots: {
+      index: false,
+      follow: false,
+  },
+};
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({
@@ -30,7 +54,6 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geist.variable} font-sans antialiased`}>
         <div className="flex h-screen overflow-hidden">
-          <Background blur={false} />
           {isLoggedIn && <SideMenu />}
           <main className={`flex-1 overflow-auto ${!isLoggedIn ? 'w-full' : ''}`}>
             {children}
