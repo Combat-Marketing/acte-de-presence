@@ -54,7 +54,6 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geist.variable} font-sans antialiased`}>
         <div className="flex h-screen overflow-hidden">
-          {isLoggedIn && <SideMenu />}
           <main className={`flex-1 overflow-auto ${!isLoggedIn ? 'w-full' : ''}`}>
             {children}
           </main>
