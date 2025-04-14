@@ -1,0 +1,164 @@
+name: acte-de-presence
+services:
+  api-gateway:
+    image: traefik:v3.0
+    container_name: api-gateway
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.dashboard.address=:9000"
+      - "--entrypoints.keycloak.address=:8082"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.consulcatalog=true"
+      - "--providers.consulcatalog.endpoint.address=consul:8500"
+      - "--providers.consulcatalog.prefix=traefik"
+      - "--providers.consulcatalog.exposedByDefault=false"
+
+    ports:
+      - "8080:80"      # Proxy/API entrypoint
+      - "9000:9000"    # Dashboard entrypoint
+      - "8082:8082"    # Keycloak entrypoint
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`localhost`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.entrypoints=dashboard"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - keycloak
+      - consul
+    networks:
+      - acte_de_presence_net 
+
+  cms-service:
+    build: 
+      context: ../
+      dockerfile: apps/microservices/cms-service/Dockerfile
+    env_file:
+      - ../config/local.env
+    depends_on:
+      - consul
+      - postgres
+      - redis
+    networks:
+      - acte_de_presence_net
+  
+  auth-service:
+    build: 
+      context: ../
+      dockerfile: apps/microservices/auth-service/Dockerfile
+    env_file:
+      - ../config/local.env
+    # labels:
+    #   # - "traefik.enable=true"
+    #   # - "traefik.http.routers.auth.rule=PathPrefix(`/auth`)"
+    #   # - "traefik.http.middlewares.auth-strip-prefix.stripPrefix.prefixes=/auth"
+    #   # - "traefik.http.routers.auth.middlewares=auth-strip-prefix"
+    #   # - "traefik.http.services.auth.loadbalancer.server.port=5002"
+    depends_on:
+      - consul
+      - postgres
+      - redis
+      - keycloak
+    networks:
+      - acte_de_presence_net
+
+  documents-service:
+    build: 
+      context: ../
+      dockerfile: apps/microservices/documents-service/Dockerfile
+    env_file:
+      - ../config/local.env
+    depends_on:
+      - consul
+      - postgres
+      - redis
+    networks:
+      - acte_de_presence_net
+
+  settings-service:
+    build: 
+      context: ../
+      dockerfile: apps/microservices/settings-service/Dockerfile
+    env_file:
+      - ../config/local.env
+    depends_on:
+      - consul
+      - postgres
+      - redis
+    networks:
+      - acte_de_presence_net
+
+  ## -> Service entries will be added here <- ##
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - acp_pg_data:/var/lib/postgresql/data
+    networks:
+      - acte_de_presence_net
+
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - acp_redis_data:/data
+    networks:
+      - acte_de_presence_net
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+    volumes:
+      - acp_keycloak_data:/opt/keycloak/data
+      - ./keycloak/realms:/opt/keycloak/data/import
+    command: ["start-dev", "--import-realm", "/opt/keycloak/data/import/acp-realm.json"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.keycloak.entrypoints=keycloak"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+    depends_on:
+      - postgres
+    networks:
+      - acte_de_presence_net
+
+
+  consul:
+    image: hashicorp/consul:latest
+    container_name: consul
+    ports:
+      - "8500:8500"
+    command: ["agent", "-dev", "-client", "0.0.0.0"	]
+    volumes:
+      - acp_consul_data:/consul/data
+    networks:
+      - acte_de_presence_net
+
+volumes:
+  acp_pg_data:
+  acp_redis_data:
+  acp_keycloak_data:
+  acp_consul_data:
+  
+      
+networks:
+  acte_de_presence_net:
+    driver: bridge

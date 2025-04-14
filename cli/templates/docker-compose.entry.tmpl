@@ -1,0 +1,10 @@
+{{.ServiceID}}:
+    build: 
+      context: ../
+      dockerfile: apps/microservices/{{.ServiceID}}/Dockerfile
+    ports:
+      - "{{.Port}}:{{.Port}}"
+    env_file:
+      - ../config/local.env
+    depends_on:
+      - consul
