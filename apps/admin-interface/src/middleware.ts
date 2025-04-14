@@ -1,22 +1,23 @@
 import { auth } from "./auth"
+import { NextResponse } from "next/server"
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth
   const { nextUrl } = req
 
   // Protect all routes under /dashboard
-  if (nextUrl.pathname.startsWith("/dashboard")) {
+  if (nextUrl.pathname.startsWith("/") && !nextUrl.pathname.startsWith("/login")) {
     if (!isLoggedIn) {
-      return Response.redirect(new URL("/login", nextUrl))
+      return NextResponse.redirect(new URL("/login", nextUrl))
     }
   }
 
   // Redirect logged-in users away from auth pages
-  if (isLoggedIn && (nextUrl.pathname === "/login" || nextUrl.pathname === "/register")) {
-    return Response.redirect(new URL("/dashboard", nextUrl))
+  if (isLoggedIn && (nextUrl.pathname === "/login")) {
+    return NextResponse.redirect(new URL("/", nextUrl))
   }
 
-  return null
+  return NextResponse.next()
 })
 
 // Optionally configure middleware matcher
