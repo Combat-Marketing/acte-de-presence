@@ -133,7 +133,7 @@ func generateMicroservice(serviceName, serviceID, portStr string) {
 			Port:      port,
 		}
 		dockerfilePath := fmt.Sprintf("%s/Dockerfile", serviceDir)
-		templateContent, err := os.ReadFile("templates/dockerfile.tmpl")
+		templateContent, err := os.ReadFile("templates/docker_file.tmpl")
 		if err != nil {
 			log.Fatalf("Failed to read Dockerfile template: %v", err)
 		}
