@@ -1,23 +1,31 @@
-import { auth } from "./auth"
+
 import { NextResponse } from "next/server"
+import { auth } from "./auth"
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth
+  console.log("isLoggedIn", isLoggedIn)
+  console.log("req.auth", req.auth)
   const { nextUrl } = req
 
-  // Protect all routes under /dashboard
-  if (nextUrl.pathname.startsWith("/") && !nextUrl.pathname.startsWith("/login") && !nextUrl.pathname.startsWith("/img")) {
-    if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/login", nextUrl))
-    }
+  // Allow auth-related routes
+  if (nextUrl.pathname.startsWith("/api/auth") || 
+      nextUrl.pathname.startsWith("/_next") || 
+      nextUrl.pathname.startsWith("/static") ||
+      nextUrl.pathname.startsWith("/img") ||
+      nextUrl.pathname.startsWith("/login")) {
+    return
   }
 
-  // Redirect logged-in users away from auth pages
-  if (isLoggedIn && (nextUrl.pathname === "/login")) {
+  // Protect all other routes
+  if (!isLoggedIn) {
+    return NextResponse.redirect(new URL("/login", nextUrl))
+  }
+
+  // Redirect logged-in users away from login page
+  if (isLoggedIn && nextUrl.pathname === "/login") {
     return NextResponse.redirect(new URL("/", nextUrl))
   }
-
-  return NextResponse.next()
 })
 
 // Optionally configure middleware matcher

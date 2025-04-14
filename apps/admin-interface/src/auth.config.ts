@@ -10,19 +10,37 @@ export const authConfig = {
     }),
   ],
   callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        token.accessToken = account.access_token
+      }
+      return token
+    },
+    async session({ session, token }) {
+      session.accessToken = token.accessToken as string | undefined
+      return session
+    },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user
-      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard")
-      if (isOnDashboard) {
-        if (isLoggedIn) return true
-        return false // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/dashboard", nextUrl))
+      const isOnLoginPage = nextUrl.pathname === "/login"
+      
+      if (isOnLoginPage) {
+        if (isLoggedIn) {
+          return Response.redirect(new URL("/", nextUrl))
+        }
+        return true
       }
+
+      if (!isLoggedIn) {
+        return false
+      }
+
       return true
     },
   },
   pages: {
-    signIn: "/",
+    signIn: "/login",
   },
+  trustHost: true,
+  debug: true,
 } satisfies NextAuthConfig

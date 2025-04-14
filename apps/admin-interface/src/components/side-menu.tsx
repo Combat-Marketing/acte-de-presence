@@ -39,7 +39,7 @@ function SideMenuContent() {
       <div className="w-12 bg-[var(--color-bg-secondary)] h-full border-r border-r-[var(--color-primary)] flex flex-col">
         <div className="py-5 px-1 flex justify-center items-center border-b border-b-gray-300">
           <Image
-            src="/acp-icon.svg"
+            src="/img/acp-icon.svg"
             alt="ACP Logo"
             width={341}
             height={146}
