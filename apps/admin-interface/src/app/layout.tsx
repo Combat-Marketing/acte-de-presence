@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import SideMenu from "@/components/side-menu";
 import { auth } from "@/auth";
+import Background from "@/components/ui/background";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geist.variable} font-sans antialiased`}>
         <div className="flex h-screen overflow-hidden">
+          <Background blur={false} />
           {isLoggedIn && <SideMenu />}
           <main className={`flex-1 overflow-auto ${!isLoggedIn ? 'w-full' : ''}`}>
             {children}

@@ -6,7 +6,7 @@ export default auth((req) => {
   const { nextUrl } = req
 
   // Protect all routes under /dashboard
-  if (nextUrl.pathname.startsWith("/") && !nextUrl.pathname.startsWith("/login")) {
+  if (nextUrl.pathname.startsWith("/") && !nextUrl.pathname.startsWith("/login") && !nextUrl.pathname.startsWith("/img")) {
     if (!isLoggedIn) {
       return NextResponse.redirect(new URL("/login", nextUrl))
     }
