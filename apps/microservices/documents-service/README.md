@@ -131,3 +131,27 @@ The service automatically attempts to apply any pending migrations on startup. T
 - `SERVICE_PORT` - Port for the service to listen on
 - `SERVICE_ENDPOINT` - Service endpoint for Consul registration
 - `DOCUMENT_STORAGE_PATH` - Path to store uploaded documents
+
+## Planned
+- [ ] Data model setup for the different document types
+    - [ ] FOLDER
+    - [ ] PAGE
+    - [ ] LINK
+    - [ ] SNIPPET
+    - [ ] EMAIL
+- [ ] Localization support
+- [ ] Document properties support
+    - [ ] Inheritance
+- [ ] Master document support
+- [ ] Version control and document history
+- [ ] Workflow management system for document approval processes
+- [ ] Advanced document relationships (parent/child, references)
+- [ ] Custom field types and validation
+- [ ] Document templates
+- [ ] Access control lists for fine-grained permissions
+- [ ] Full-text search integration
+- [ ] Document preview generation
+- [ ] Bulk operations API
+- [ ] Document tree structure with drag-and-drop support
+- [ ] Scheduled publishing/unpublishing
+- [ ] Document cloning functionality
