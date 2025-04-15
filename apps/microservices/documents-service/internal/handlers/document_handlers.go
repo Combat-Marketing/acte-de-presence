@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 // DocumentHandler handles document-related HTTP requests
@@ -25,14 +26,14 @@ func (h *DocumentHandler) GetDocuments(c *gin.Context) {
 	// Parse query parameters
 	limitStr := c.DefaultQuery("limit", "50")
 	offsetStr := c.DefaultQuery("offset", "0")
-	documentType := c.Query("type")
-	tag := c.Query("tag")
+	documentType := c.DefaultQuery("type", "")
+	tag := c.DefaultQuery("tag", "")
 
-	var parentID *uint
+	var parentID *uuid.UUID
 	if parentIDStr := c.Query("parent_id"); parentIDStr != "" {
-		if id, err := strconv.ParseUint(parentIDStr, 10, 32); err == nil {
-			parentUint := uint(id)
-			parentID = &parentUint
+		if id, err := uuid.FromBytes([]byte(parentIDStr)); err == nil {
+			parentUUID := id
+			parentID = &parentUUID
 		}
 	}
 
@@ -63,13 +64,13 @@ func (h *DocumentHandler) GetDocuments(c *gin.Context) {
 
 // GetDocument handles GET /documents/:id
 func (h *DocumentHandler) GetDocument(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := uuid.FromBytes([]byte(c.Param("id")))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid document ID"})
 		return
 	}
 
-	document, err := h.DocumentService.GetDocumentByID(uint(id))
+	document, err := h.DocumentService.GetDocumentByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Document not found"})
 		return
@@ -107,7 +108,7 @@ func (h *DocumentHandler) CreateDocument(c *gin.Context) {
 		Key          string              `json:"key" binding:"required"`
 		Index        *uint               `json:"index"`
 		DocumentType models.DocumentType `json:"document_type" binding:"required"`
-		ParentID     *uint               `json:"parent_id"`
+		ParentID     *uuid.UUID          `json:"parent_id"`
 		Metadata     []struct {
 			Key   string `json:"key" binding:"required"`
 			Value string `json:"value" binding:"required"`
@@ -161,14 +162,14 @@ func (h *DocumentHandler) CreateDocument(c *gin.Context) {
 
 // UpdateDocument handles PUT /documents/:id
 func (h *DocumentHandler) UpdateDocument(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := uuid.FromBytes([]byte(c.Param("id")))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid document ID"})
 		return
 	}
 
 	// Get existing document
-	document, err := h.DocumentService.GetDocumentByID(uint(id))
+	document, err := h.DocumentService.GetDocumentByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Document not found"})
 		return
@@ -201,20 +202,20 @@ func (h *DocumentHandler) UpdateDocument(c *gin.Context) {
 	}
 
 	// Return the updated document
-	updatedDoc, _ := h.DocumentService.GetDocumentByID(uint(id))
+	updatedDoc, _ := h.DocumentService.GetDocumentByID(id)
 	c.JSON(http.StatusOK, updatedDoc)
 }
 
 // MoveDocument handles POST /documents/:id/move
 func (h *DocumentHandler) MoveDocument(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := uuid.FromBytes([]byte(c.Param("id")))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid document ID"})
 		return
 	}
 
 	var request struct {
-		ParentID *uint `json:"parent_id"`
+		ParentID *uuid.UUID `json:"parent_id"`
 	}
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -222,25 +223,25 @@ func (h *DocumentHandler) MoveDocument(c *gin.Context) {
 		return
 	}
 
-	if err := h.DocumentService.MoveDocument(uint(id), request.ParentID); err != nil {
+	if err := h.DocumentService.MoveDocument(id, request.ParentID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to move document: %v", err)})
 		return
 	}
 
 	// Return the updated document
-	updatedDoc, _ := h.DocumentService.GetDocumentByID(uint(id))
+	updatedDoc, _ := h.DocumentService.GetDocumentByID(id)
 	c.JSON(http.StatusOK, updatedDoc)
 }
 
 // DeleteDocument handles DELETE /documents/:id
 func (h *DocumentHandler) DeleteDocument(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := uuid.FromBytes([]byte(c.Param("id")))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid document ID"})
 		return
 	}
 
-	if err := h.DocumentService.DeleteDocument(uint(id)); err != nil {
+	if err := h.DocumentService.DeleteDocument(id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete document"})
 		return
 	}
@@ -250,7 +251,7 @@ func (h *DocumentHandler) DeleteDocument(c *gin.Context) {
 
 // AddTagToDocument handles POST /documents/:id/tags
 func (h *DocumentHandler) AddTagToDocument(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := uuid.FromBytes([]byte(c.Param("id")))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid document ID"})
 		return
@@ -265,7 +266,7 @@ func (h *DocumentHandler) AddTagToDocument(c *gin.Context) {
 		return
 	}
 
-	if err := h.DocumentService.AddTagToDocument(uint(id), request.Tag); err != nil {
+	if err := h.DocumentService.AddTagToDocument(id, request.Tag); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add tag"})
 		return
 	}
@@ -275,7 +276,7 @@ func (h *DocumentHandler) AddTagToDocument(c *gin.Context) {
 
 // RemoveTagFromDocument handles DELETE /documents/:id/tags/:tag
 func (h *DocumentHandler) RemoveTagFromDocument(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := uuid.FromBytes([]byte(c.Param("id")))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid document ID"})
 		return
@@ -287,7 +288,7 @@ func (h *DocumentHandler) RemoveTagFromDocument(c *gin.Context) {
 		return
 	}
 
-	if err := h.DocumentService.RemoveTagFromDocument(uint(id), tag); err != nil {
+	if err := h.DocumentService.RemoveTagFromDocument(id, tag); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove tag"})
 		return
 	}
@@ -297,7 +298,7 @@ func (h *DocumentHandler) RemoveTagFromDocument(c *gin.Context) {
 
 // SetMetadataForDocument handles POST /documents/:id/metadata
 func (h *DocumentHandler) SetMetadataForDocument(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := uuid.FromBytes([]byte(c.Param("id")))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid document ID"})
 		return
@@ -313,7 +314,7 @@ func (h *DocumentHandler) SetMetadataForDocument(c *gin.Context) {
 		return
 	}
 
-	if err := h.DocumentService.UpdateMetadataForDocument(uint(id), request.Key, request.Value); err != nil {
+	if err := h.DocumentService.UpdateMetadataForDocument(id, request.Key, request.Value); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to set metadata"})
 		return
 	}

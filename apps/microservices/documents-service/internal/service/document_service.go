@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -20,7 +21,7 @@ func NewDocumentService(db *gorm.DB) *DocumentService {
 }
 
 // GetDocuments retrieves documents with optional filters
-func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag string, parentID *uint) ([]models.Document, int64, error) {
+func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag string, parentID *uuid.UUID) ([]models.Document, int64, error) {
 	var documents []models.Document
 	var total int64
 
@@ -55,7 +56,7 @@ func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag stri
 }
 
 // GetDocumentByID retrieves a document by its ID
-func (s *DocumentService) GetDocumentByID(id uint) (*models.Document, error) {
+func (s *DocumentService) GetDocumentByID(id uuid.UUID) (*models.Document, error) {
 	var document models.Document
 	if err := s.DB.Preload("Tags").Preload("Metadata").Preload("Children", func(db *gorm.DB) *gorm.DB {
 		return db.Order("index ASC")
@@ -145,12 +146,12 @@ func (s *DocumentService) UpdateDocument(doc *models.Document) error {
 }
 
 // UpdateDocumentIndex updates just the index of a document
-func (s *DocumentService) UpdateDocumentIndex(id uint, index uint) error {
+func (s *DocumentService) UpdateDocumentIndex(id uuid.UUID, index uint) error {
 	return s.DB.Model(&models.Document{}).Where("id = ?", id).Update("index", index).Error
 }
 
 // DeleteDocument deletes a document and its children
-func (s *DocumentService) DeleteDocument(id uint) error {
+func (s *DocumentService) DeleteDocument(id uuid.UUID) error {
 	return s.DB.Transaction(func(tx *gorm.DB) error {
 		// First, get the document
 		var document models.Document
@@ -164,7 +165,7 @@ func (s *DocumentService) DeleteDocument(id uint) error {
 }
 
 // MoveDocument moves a document to a new parent
-func (s *DocumentService) MoveDocument(docID uint, newParentID *uint) error {
+func (s *DocumentService) MoveDocument(docID uuid.UUID, newParentID *uuid.UUID) error {
 	return s.DB.Transaction(func(tx *gorm.DB) error {
 		var document models.Document
 		if err := tx.First(&document, docID).Error; err != nil {
@@ -239,7 +240,7 @@ func (s *DocumentService) MoveDocument(docID uint, newParentID *uint) error {
 }
 
 // AddTagToDocument adds a tag to a document
-func (s *DocumentService) AddTagToDocument(documentID uint, tagName string) error {
+func (s *DocumentService) AddTagToDocument(documentID uuid.UUID, tagName string) error {
 	// Find or create tag
 	var tag models.Tag
 	if err := s.DB.Where("name = ?", tagName).FirstOrCreate(&tag, models.Tag{Name: tagName}).Error; err != nil {
@@ -251,7 +252,7 @@ func (s *DocumentService) AddTagToDocument(documentID uint, tagName string) erro
 }
 
 // RemoveTagFromDocument removes a tag from a document
-func (s *DocumentService) RemoveTagFromDocument(documentID uint, tagName string) error {
+func (s *DocumentService) RemoveTagFromDocument(documentID uuid.UUID, tagName string) error {
 	var tag models.Tag
 	if err := s.DB.Where("name = ?", tagName).First(&tag).Error; err != nil {
 		return err
@@ -261,7 +262,7 @@ func (s *DocumentService) RemoveTagFromDocument(documentID uint, tagName string)
 }
 
 // AddMetadataToDocument adds metadata to a document
-func (s *DocumentService) AddMetadataToDocument(documentID uint, key, value string) error {
+func (s *DocumentService) AddMetadataToDocument(documentID uuid.UUID, key, value string) error {
 	metadata := models.Metadata{
 		DocumentID: documentID,
 		Key:        key,
@@ -272,7 +273,7 @@ func (s *DocumentService) AddMetadataToDocument(documentID uint, key, value stri
 }
 
 // UpdateMetadataForDocument updates or creates metadata for a document
-func (s *DocumentService) UpdateMetadataForDocument(documentID uint, key, value string) error {
+func (s *DocumentService) UpdateMetadataForDocument(documentID uuid.UUID, key, value string) error {
 	return s.DB.Transaction(func(tx *gorm.DB) error {
 		var metadata models.Metadata
 		result := tx.Where("document_id = ? AND key = ?", documentID, key).First(&metadata)
