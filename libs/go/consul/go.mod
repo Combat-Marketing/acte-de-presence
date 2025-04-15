@@ -1,11 +1,13 @@
 module acp/libs/consul
 
+// Version v1.0.0
 go 1.24.2
+
+require github.com/hashicorp/consul/api v1.32.0
 
 require (
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/fatih/color v1.16.0 // indirect
-	github.com/hashicorp/consul/api v1.32.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-hclog v1.5.0 // indirect

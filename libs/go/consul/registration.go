@@ -4,9 +4,48 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/hashicorp/consul/api"
 )
+
+// Client wraps the Consul API client
+type Client struct {
+	Consul *api.Client
+}
+
+// GetKV retrieves a key-value pair from Consul
+func (c *Client) GetKV(key string) (string, error) {
+	// Get the KV pair from Consul
+	pair, _, err := c.Consul.KV().Get(key, nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to get key %s: %v", key, err)
+	}
+
+	// Check if the key exists
+	if pair == nil {
+		return "", fmt.Errorf("key %s not found", key)
+	}
+
+	// Return the value as a string
+	return string(pair.Value), nil
+}
+
+// NewClient creates a new Consul client
+func NewClient(address string) (*Client, error) {
+	config := api.DefaultConfig()
+	config.Address = address
+
+	consul, err := api.NewClient(config)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Client{
+		Consul: consul,
+	}, nil
+}
 
 // ServiceConfig holds the configuration for a service to be registered with Consul
 type ServiceConfig struct {
@@ -149,16 +188,15 @@ func RegisterServiceFromEnv() (*Client, error) {
 	go func() {
 		// Wait for interrupt signal
 		sigChan := make(chan os.Signal, 1)
-		select {
-		case <-sigChan:
-			log.Println("Shutting down...")
-			// Deregister service
-			err := client.DeregisterService(serviceID)
-			if err != nil {
-				log.Printf("Failed to deregister service: %v", err)
-			}
-			os.Exit(0)
+		signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+		<-sigChan
+		log.Println("Shutting down...")
+		// Deregister service
+		err := client.DeregisterService(serviceID)
+		if err != nil {
+			log.Printf("Failed to deregister service: %v", err)
 		}
+		os.Exit(0)
 	}()
 
 	return client, nil

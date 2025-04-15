@@ -12,6 +12,7 @@ This document outlines the development milestones and infrastructure setup for t
 - [x] Docker Compose-based dev environment
 - [x] Central `.env` config and `env_file` support
 - [x] PostgreSQL, Redis, and Keycloak containerized
+- [ ] ImgProxy containerized
 - [x] Consul cluster for:
   - [x] Service discovery
   - [x] KV store
@@ -39,6 +40,8 @@ This document outlines the development milestones and infrastructure setup for t
   - `/auth`
   - `/cms`
   - `/documents`
+  - `/assets`
+  - `/data-objects`
 
 ---
 
@@ -50,6 +53,14 @@ This document outlines the development milestones and infrastructure setup for t
 - [ ] Write unit tests for each service's endpoints
 - [ ] Implement Documents and Assets data models and services
 - [ ] Set up MinIO for S3-compatible object storage
+- [ ] Refactor to GORM with Atlas migrations:
+  - [ ] Set up Atlas CLI and configuration
+  - [ ] Convert existing models to GORM structs
+  - [ ] Create Atlas migration files
+  - [ ] Implement GORM repositories
+  - [ ] Add migration scripts to CI/CD
+  - [ ] Update service configurations
+  - [ ] Add migration documentation
 
 ---
 
