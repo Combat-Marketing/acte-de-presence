@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/sonner-toast";
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import { RefreshHandler } from "@/components/refresh-handler";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -59,6 +60,7 @@ export default async function RootLayout({
           </main>
         </div>
         <Toaster />
+        <RefreshHandler />
       </body>
     </html>
   );

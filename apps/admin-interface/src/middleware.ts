@@ -4,8 +4,6 @@ import { auth } from "./auth"
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth
-  console.log("isLoggedIn", isLoggedIn)
-  console.log("req.auth", req.auth)
   const { nextUrl } = req
 
   // Allow auth-related routes

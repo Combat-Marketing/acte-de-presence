@@ -43,6 +43,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   debug: false,
   logger: {
+    info(code: string) {
+      console.log(code)
+    },
     error(error: Error) {
       console.error(error)
     },

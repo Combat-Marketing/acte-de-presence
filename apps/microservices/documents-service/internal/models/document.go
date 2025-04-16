@@ -2,12 +2,14 @@ package models
 
 import (
 	"database/sql/driver"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
+// DocumentType string enum for document types
 type DocumentType string
 
 const (
@@ -19,7 +21,19 @@ const (
 )
 
 func (documentType *DocumentType) Scan(value any) error {
-	*documentType = DocumentType(value.([]byte))
+	if value == nil {
+		return nil
+	}
+
+	switch v := value.(type) {
+	case []byte:
+		*documentType = DocumentType(v)
+	case string:
+		*documentType = DocumentType(v)
+	default:
+		// Add more detailed error handling with type information
+		return fmt.Errorf("cannot scan value of type %T into DocumentType, expected []byte or string", value)
+	}
 	return nil
 }
 

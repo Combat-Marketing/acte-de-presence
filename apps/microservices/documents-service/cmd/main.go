@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"time"
 
 	"acp/libs/consul"
 	"acp/microservices/documents-service/internal/database"
@@ -14,6 +15,7 @@ import (
 	"acp/microservices/documents-service/internal/service"
 
 	_ "ariga.io/atlas-provider-gorm/gormschema"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -66,18 +68,6 @@ func main() {
 		}
 	}
 
-	// Get database connection string from environment
-	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		dbURL = "postgres://postgres:postgres@localhost:5432/documents?sslmode=disable"
-	}
-
-	// Run migrations before connecting to the database
-	if err := runMigrations(); err != nil {
-		log.Printf("Warning: Failed to run migrations: %v", err)
-		// Continue execution - might be running without Atlas installed
-	}
-
 	// Initialize database
 	db, err := database.InitDatabase()
 	if err != nil {
@@ -90,6 +80,16 @@ func main() {
 
 	// Create router
 	router := gin.Default()
+
+	// Configure CORS
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"}, // Or specify your frontend URL
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	// Add health check endpoint
 	router.GET("/health", func(c *gin.Context) {
