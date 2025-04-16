@@ -15,11 +15,18 @@ RUN go mod tidy
 # Copy service code
 COPY apps/microservices/documents-service ./
 
+# Build main application
 RUN go build -o app ./cmd/main.go
 
+# Final stage
 FROM alpine:latest
-RUN apk add --no-cache ca-certificates
+
+WORKDIR /app
+
+# Copy binaries from builder
 COPY --from=builder /app/app /app/app
+
+# No need to run migrations again here since we already did it in the migration stage
 
 EXPOSE 5003
 CMD ["/app/app"]

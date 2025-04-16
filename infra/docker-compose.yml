@@ -1,5 +1,119 @@
+############################################################################################
+## ACTE DE PRESENCE - DOCKER COMPOSE FILE FOR LOCAL DEVELOPMENT ENVIRONMENT               ##
+############################################################################################
+
 name: acte-de-presence
 services:
+
+  ##########################################################################################
+  ## Infrastructure Services                                                              ##
+  ## These services are used for local development and testing purposes.                  ##
+  ## They are not intended for production use.                                            ##
+  ##########################################################################################
+
+  # PostgreSQL database service
+  # This service uses the official PostgreSQL image and sets up a database with SSL enabled
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_SSL=true
+      - POSTGRES_MULTIPLE_DATABASES=documents,auth,settings,assets
+    volumes:
+      - acp_pg_data:/var/lib/postgresql/data
+      - ./postgres/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh:ro
+    networks:
+      - acte_de_presence_net
+
+  # Redis service for caching and session management
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - acp_redis_data:/data
+    networks:
+      - acte_de_presence_net
+
+  # Consul service for service discovery and configuration management
+  consul:
+    image: hashicorp/consul:latest
+    container_name: consul
+    ports:
+      - "8500:8500"
+    command: ["agent", "-dev", "-client", "0.0.0.0"	]
+    volumes:
+      - acp_consul_data:/consul/data
+    networks:
+      - acte_de_presence_net
+
+  # Adminer service for database management
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    environment:
+      - ADMINER_DESIGN=dracula
+      - ADMINER_DEFAULT_DB=postgres
+      - ADMINER_DEFAULT_SERVER=postgres
+      - ADMINER_USER=postgres
+      - ADMINER_PASSWORD=postgres
+      - ADMINER_PLUGINS=tables-filter tinymce pretty-json-column codemirror table-indexes-structure
+    networks:
+      - acte_de_presence_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adminer.rule=Host(`localhost`) && PathPrefix(`/adminer`)"
+      - "traefik.http.services.adminer.loadbalancer.server.port=8080"
+      - "traefik.http.routers.adminer.entrypoints=web"
+    depends_on:
+      - postgres
+  
+  # Atlas service for database migrations
+  atlas:
+    image: arigaio/atlas:latest-alpine
+    volumes:
+      - ../apps/microservices:/migrations
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - acte_de_presence_net
+    depends_on:
+      - postgres
+    profiles:
+      - migrations
+    # Not started by default, only when explicitly invoked
+
+  # Keycloak service for authentication and authorization
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+    volumes:
+      - acp_keycloak_data:/opt/keycloak/data
+      - ./keycloak/realms:/opt/keycloak/data/import
+    command: ["start-dev", "--import-realm", "/opt/keycloak/data/import/acp-realm.json"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.keycloak.entrypoints=keycloak"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+    depends_on:
+      - postgres
+    networks:
+      - acte_de_presence_net
+
+  # Traefik service for reverse proxy and load balancing
   api-gateway:
     image: traefik:v3.0
     container_name: api-gateway
@@ -32,6 +146,13 @@ services:
       - consul
     networks:
       - acte_de_presence_net 
+
+  ##########################################################################################
+  ## Microservices                                                                        ##
+  ## These services are the core of the application and are built from the source code.   ##
+  ## They are intended for local development and testing purposes.                        ##
+  ## They are not intended for production use.                                            ##
+  ##########################################################################################
 
   cms-service:
     build: 
@@ -94,66 +215,6 @@ services:
 
   ## -> Service entries will be added here <- ##
 
-  postgres:
-    image: postgres:16-alpine
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
-      - POSTGRES_SSL=true
-      - POSTGRES_MULTIPLE_DATABASES=documents,auth,settings,assets
-    volumes:
-      - acp_pg_data:/var/lib/postgresql/data
-      - ./postgres/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh:ro
-    networks:
-      - acte_de_presence_net
-
-
-  redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    volumes:
-      - acp_redis_data:/data
-    networks:
-      - acte_de_presence_net
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres:5432/postgres
-      KC_DB_USERNAME: postgres
-      KC_DB_PASSWORD: postgres
-    volumes:
-      - acp_keycloak_data:/opt/keycloak/data
-      - ./keycloak/realms:/opt/keycloak/data/import
-    command: ["start-dev", "--import-realm", "/opt/keycloak/data/import/acp-realm.json"]
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.keycloak.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.keycloak.entrypoints=keycloak"
-      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
-    depends_on:
-      - postgres
-    networks:
-      - acte_de_presence_net
-
-
-  consul:
-    image: hashicorp/consul:latest
-    container_name: consul
-    ports:
-      - "8500:8500"
-    command: ["agent", "-dev", "-client", "0.0.0.0"	]
-    volumes:
-      - acp_consul_data:/consul/data
-    networks:
-      - acte_de_presence_net
 
 volumes:
   acp_pg_data:

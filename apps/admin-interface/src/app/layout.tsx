@@ -1,8 +1,8 @@
+import { auth } from "@/auth";
+import { Toaster } from "@/components/ui/sonner-toast";
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
-import SideMenu from "@/components/side-menu";
-import { auth } from "@/auth";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -13,13 +13,13 @@ export const metadata: Metadata = {
   title: "Acte de Présence",
   description: "Acte de Présence",
   icons: {
-      icon: "/img/favicon/favicon.ico",
-      apple: "/img/favicon/apple-touch-icon.png",
-      other: [
-          { rel: "icon", type: "image/png", url: "/img/favicon/favicon.png" },
-          { rel: "icon", type: "image/png", url: "/img/favicon/favicon-32x32.png" },
-          { rel: "icon", type: "image/png", url: "/img/favicon/favicon-16x16.png" },
-      ]
+    icon: "/img/favicon/favicon.ico",
+    apple: "/img/favicon/apple-touch-icon.png",
+    other: [
+      { rel: "icon", type: "image/png", url: "/img/favicon/favicon.png" },
+      { rel: "icon", type: "image/png", url: "/img/favicon/favicon-32x32.png" },
+      { rel: "icon", type: "image/png", url: "/img/favicon/favicon-16x16.png" },
+    ]
   },
   manifest: "/img/favicon/site.webmanifest",
   generator: "Acte de Présence",
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Combat Jongerenmarketing", url: "https://combat.nl" }],
   publisher: "Combat Jongerenmarketing",
   robots: {
-      index: false,
-      follow: false,
+    index: false,
+    follow: false,
   },
 };
 export const viewport: Viewport = {
@@ -58,6 +58,7 @@ export default async function RootLayout({
             {children}
           </main>
         </div>
+        <Toaster />
       </body>
     </html>
   );

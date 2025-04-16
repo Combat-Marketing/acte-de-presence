@@ -1,17 +1,28 @@
-import { Loader2 } from "lucide-react"
-import { cn } from "@/lib/utils"
+"use client";
+
+import React from "react";
+import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface LoadingProps {
-  className?: string
-  size?: number
+  size?: "sm" | "md" | "lg";
+  className?: string;
+  text?: string;
 }
 
-export function Loading({ className, size = 24 }: LoadingProps) {
+export function Loading({ size = "md", className, text }: LoadingProps) {
+  const sizeClasses = {
+    sm: "h-4 w-4",
+    md: "h-6 w-6",
+    lg: "h-8 w-8",
+  };
+
   return (
-    <div className={cn("flex items-center justify-center", className)}>
-      <Loader2 className="animate-spin" size={size} />
+    <div className={cn("flex items-center justify-center gap-2", className)}>
+      <Loader2 className={cn("animate-spin text-muted-foreground", sizeClasses[size])} />
+      {text && <span className="text-muted-foreground text-sm">{text}</span>}
     </div>
-  )
+  );
 }
 
 export function SideMenuLoading() {
@@ -31,5 +42,5 @@ export function SideMenuLoading() {
         ))}
       </div>
     </div>
-  )
-} 
+  );
+}

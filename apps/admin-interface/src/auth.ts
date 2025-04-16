@@ -41,16 +41,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session
     }
   },
-  debug: process.env.NODE_ENV === "development",
+  debug: false,
   logger: {
     error(error: Error) {
       console.error(error)
     },
     warn(code: string) {
       console.warn(code)
-    },
-    debug(code: string, metadata?: unknown) {
-      console.debug(code, metadata)
     }
   }
 })

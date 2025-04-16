@@ -107,29 +107,29 @@ func main() {
 	})
 
 	// API routes
-	api := router.Group("/api/v1")
+	api := router.Group("/")
 	{
 		// Public routes
-		api.GET("/documents/:id/download", func(c *gin.Context) {
+		api.GET("/:id/download", func(c *gin.Context) {
 			// Implementation for downloading documents would go here
 			// This endpoint would serve the document file
 			c.JSON(http.StatusOK, gin.H{"message": "Download endpoint not yet implemented"})
 		})
+		api.GET("/", documentHandler.GetDocuments)
+		api.GET("/:id", documentHandler.GetDocument)
 
 		// Protected routes
 		protected := api.Group("/")
 		protected.Use(middleware.AuthMiddleware())
 		{
 			// Document routes
-			protected.GET("/documents", documentHandler.GetDocuments)
-			protected.GET("/documents/:id", documentHandler.GetDocument)
-			protected.POST("/documents", documentHandler.CreateDocument)
-			protected.PUT("/documents/:id", documentHandler.UpdateDocument)
-			protected.DELETE("/documents/:id", documentHandler.DeleteDocument)
+			protected.POST("/", documentHandler.CreateDocument)
+			protected.PUT("/:id", documentHandler.UpdateDocument)
+			protected.DELETE("/:id", documentHandler.DeleteDocument)
 
 			// Tag routes
-			protected.POST("/documents/:id/tags", documentHandler.AddTagToDocument)
-			protected.DELETE("/documents/:id/tags/:tag", documentHandler.RemoveTagFromDocument)
+			protected.POST("/:id/tags", documentHandler.AddTagToDocument)
+			protected.DELETE("/:id/tags/:tag", documentHandler.RemoveTagFromDocument)
 		}
 	}
 

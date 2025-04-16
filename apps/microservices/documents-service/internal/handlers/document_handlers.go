@@ -50,7 +50,7 @@ func (h *DocumentHandler) GetDocuments(c *gin.Context) {
 	// Get documents
 	documents, total, err := h.DocumentService.GetDocuments(limit, offset, documentType, tag, parentID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get documents"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
 
