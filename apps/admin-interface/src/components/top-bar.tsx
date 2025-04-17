@@ -40,12 +40,12 @@ export function TopBar({ title }: { title: string }) {
                 <Select onValueChange={(value => {
                     setSelectedWebsite(websitesMock.find(website => website.id === value) || null);
                 })}>
-                    <SelectTrigger className="min-w-[200px] bg-[var(--color-bg-primary)] text-white hover:bg-[var(--color-bg-secondary)] hover:shadow-lg hover:text-white">
+                    <SelectTrigger className="min-w-[200px] bg-white">
                         <SelectValue placeholder="Select Website" className="text-white">{selectedWebsite ? selectedWebsite.name : "Select Website"}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                         {websitesMock.map((website) => (
-                            <SelectItem key={website.id} value={website.id} className="text-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)] hover:shadow-lg hover:text-white">
+                            <SelectItem key={website.id} value={website.id} className="hover:cursor-pointer hover:bg-[var(--color-bg-secondary)] hover:shadow-lg hover:text-white">
                                 {website.name}
                             </SelectItem>
                         ))}

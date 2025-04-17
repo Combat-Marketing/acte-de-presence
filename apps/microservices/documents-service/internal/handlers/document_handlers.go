@@ -27,6 +27,11 @@ func (h *DocumentHandler) GetDocuments(c *gin.Context) {
 	limitStr := c.DefaultQuery("limit", "50")
 	offsetStr := c.DefaultQuery("offset", "0")
 	documentType := c.DefaultQuery("type", "")
+	onlyRootStr := c.DefaultQuery("only_root", "false")
+	onlyRoot, err := strconv.ParseBool(onlyRootStr)
+	if err != nil {
+		onlyRoot = false
+	}
 	tag := c.DefaultQuery("tag", "")
 
 	var parentID *uuid.UUID
@@ -48,7 +53,7 @@ func (h *DocumentHandler) GetDocuments(c *gin.Context) {
 	}
 
 	// Get documents
-	documents, total, err := h.DocumentService.GetDocuments(limit, offset, documentType, tag, parentID)
+	documents, total, err := h.DocumentService.GetDocuments(limit, offset, documentType, tag, parentID, onlyRoot)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return

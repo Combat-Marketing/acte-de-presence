@@ -149,7 +149,7 @@ export const documentsApi = {
   // Get document tree
   async getDocumentTree(parentId?: string, depth: number = 3): Promise<DocumentTreeResponse> {
     // Simplify to exactly match the working approach in the ApiDebugger
-    const url = `https://localhost:8080/documents?depth=${depth}`;
+    const url = `http://localhost:8080/documents?depth=${depth}`;
     
     window.console.log(`%c 🌳 [DocumentTree] Attempting fetch to: ${url}`, "background: #8b5cf6; color: white; padding: 2px 4px; border-radius: 2px;");
     

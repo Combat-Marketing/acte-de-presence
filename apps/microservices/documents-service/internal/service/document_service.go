@@ -21,7 +21,7 @@ func NewDocumentService(db *gorm.DB) *DocumentService {
 }
 
 // GetDocuments retrieves documents with optional filters
-func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag string, parentID *uuid.UUID) ([]models.Document, int64, error) {
+func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag string, parentID *uuid.UUID, onlyRoot bool) ([]models.Document, int64, error) {
 	var documents []models.Document
 	var total int64
 
@@ -33,7 +33,9 @@ func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag stri
 
 	if parentID != nil {
 		query = query.Where("parent_id = ?", parentID)
-	} else {
+	}
+
+	if onlyRoot {
 		query = query.Where("parent_id IS NULL")
 	}
 
@@ -48,6 +50,10 @@ func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag stri
 
 	// Apply pagination and get documents
 	err := query.Preload("Tags").Preload("Metadata").
+		Preload("Children", func(db *gorm.DB) *gorm.DB {
+			return db.Order("index ASC").Order("id ASC")
+		}).
+		Preload("Parent").
 		Limit(limit).Offset(offset).
 		Order("index ASC").
 		Find(&documents).Error

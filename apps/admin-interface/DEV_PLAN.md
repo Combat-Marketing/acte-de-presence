@@ -59,7 +59,7 @@ The Admin Interface will be a modern, responsive web application built with Next
 - [ ] Profile management
   - [ ] Edit current user profile (via Keycloak)
 - [ ] Document Management
-  - [x] Document tree view
+  - [ ] Document tree view
   - [ ] Document creation and editing
   - [ ] Version history
   - [ ] Publishing workflow
@@ -104,16 +104,16 @@ The Admin Interface will be a modern, responsive web application built with Next
 ### Components
 - [x] Navigation
   - [x] Sidebar
-  - [ ] Top bar
+  - [x] Top bar
   - [ ] Breadcrumbs
 - [ ] Data Display
   - [ ] Tables
   - [ ] Cards
   - [ ] Lists
-  - [x] Trees
+  - [ ] Trees
 - [ ] Forms
   - [x] Input fields
-  - [ ] Selectors
+  - [x] Selectors
   - [ ] Date pickers
   - [ ] File uploads
 - [x] Feedback

@@ -14,6 +14,9 @@ interface AppState {
     selectedDocument: Document | null
     setSelectedDocument: (document: Document | null) => void
 
+    documentTree: Document[]
+    setDocumentTree: (documentTree: Document[] | null) => void
+
     // UI state
     selectedAccordionItem: string | undefined
     setSelectedAccordionItem: (value: string | undefined) => void
@@ -30,6 +33,9 @@ export const useAppStore = create<AppState>((set) => ({
     // Document state
     selectedDocument: null,
     setSelectedDocument: (document) => set({ selectedDocument: document }),
+
+    documentTree: [],
+    setDocumentTree: (documents) => set({ documentTree: documents || []}),
 
     // UI state
     selectedAccordionItem: "documents",
