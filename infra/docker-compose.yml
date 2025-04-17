@@ -22,7 +22,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
       - POSTGRES_SSL=true
-      - POSTGRES_MULTIPLE_DATABASES=documents,auth,settings,assets
+      - POSTGRES_MULTIPLE_DATABASES=websites,documents,auth,settings,assets
     volumes:
       - acp_pg_data:/var/lib/postgresql/data
       - ./postgres/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh:ro
@@ -187,6 +187,19 @@ services:
     networks:
       - acte_de_presence_net
 
+  websites-service:
+    build: 
+      context: ../
+      dockerfile: apps/microservices/websites-service/Dockerfile
+    env_file:
+      - ../config/websites.local.env
+    depends_on:
+      - consul
+      - postgres
+      - redis
+    networks:
+      - acte_de_presence_net
+      
   documents-service:
     build: 
       context: ../

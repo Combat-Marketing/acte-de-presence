@@ -21,7 +21,7 @@ func NewDocumentService(db *gorm.DB) *DocumentService {
 }
 
 // GetDocuments retrieves documents with optional filters
-func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag string, parentID *uuid.UUID, onlyRoot bool) ([]models.Document, int64, error) {
+func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag string, parentID *uuid.UUID, onlyRoot bool) ([]models.DocumentDTO, int64, error) {
 	var documents []models.Document
 	var total int64
 
@@ -50,15 +50,27 @@ func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag stri
 
 	// Apply pagination and get documents
 	err := query.Preload("Tags").Preload("Metadata").
-		Preload("Children", func(db *gorm.DB) *gorm.DB {
-			return db.Order("index ASC").Order("id ASC")
-		}).
-		Preload("Parent").
 		Limit(limit).Offset(offset).
 		Order("index ASC").
 		Find(&documents).Error
+	documentDTOs := make([]models.DocumentDTO, len(documents))
+	for i, doc := range documents {
+		documentDTOs[i] = models.DocumentDTO{
+			ID:           doc.ID,
+			Path:         doc.Path,
+			Key:          doc.Key,
+			ParentID:     doc.ParentID,
+			DocumentType: doc.DocumentType,
+			Index:        doc.Index,
+			CreatedAt:    doc.CreatedAt,
+			UpdatedAt:    doc.UpdatedAt,
+		}
+	}
+	return documentDTOs, total, err
+}
 
-	return documents, total, err
+func (s *DocumentService) GetDocumentsForWebsite(websiteID uuid.UUID) []models.DocumentDTO {
+	return []models.DocumentDTO{}
 }
 
 // GetDocumentByID retrieves a document by its ID
