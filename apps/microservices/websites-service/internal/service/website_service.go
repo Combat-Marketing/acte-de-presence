@@ -40,3 +40,18 @@ func (s *WebsiteService) GetWebsites() ([]models.WebsiteDTO, int64, error) {
 	}
 	return websitesDTOs, total, nil
 }
+
+func (s *WebsiteService) CreateWebsite(website *models.Website) error {
+	// Check if website with the same domain name already exists
+	var existingWebsite models.Website
+	err := s.DB.Where("domain_name = ?", website.DomainName).First(&existingWebsite).Error
+	if err == nil {
+		return gorm.ErrRecordNotFound
+	}
+
+	// Create the new website
+	if err := s.DB.Create(&website).Error; err != nil {
+		return err
+	}
+	return nil
+}
