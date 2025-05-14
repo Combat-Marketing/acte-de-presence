@@ -49,11 +49,16 @@ func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag stri
 	query.Count(&total)
 
 	// Apply pagination and get documents
-	err := query.Preload("Tags").Preload("Metadata").
+	err := query.Preload("Tags").Preload("Metadata").Preload("Children", func(db *gorm.DB) *gorm.DB {
+		return db.Order("index ASC")
+	}).
 		Limit(limit).Offset(offset).
 		Order("index ASC").
 		Find(&documents).Error
 	documentDTOs := make([]models.DocumentDTO, len(documents))
+	// Build a map of document ID to its DTO index
+	idToDTO := make(map[uuid.UUID]*models.DocumentDTO)
+	// Convert documents to DTOs and build a map for quick lookup
 	for i, doc := range documents {
 		documentDTOs[i] = models.DocumentDTO{
 			ID:           doc.ID,
@@ -62,11 +67,26 @@ func (s *DocumentService) GetDocuments(limit, offset int, documentType, tag stri
 			ParentID:     doc.ParentID,
 			DocumentType: doc.DocumentType,
 			Index:        doc.Index,
+			Children:     &[]models.DocumentDTO{}, // initialize empty slice
 			CreatedAt:    doc.CreatedAt,
 			UpdatedAt:    doc.UpdatedAt,
 		}
+		idToDTO[doc.ID] = &documentDTOs[i]
 	}
-	return documentDTOs, total, err
+
+	// Build the tree by linking children to their parents
+	var rootDTOs []models.DocumentDTO
+	for i, doc := range documents {
+		if doc.ParentID != nil {
+			if parentDTO, ok := idToDTO[*doc.ParentID]; ok {
+				*parentDTO.Children = append(*parentDTO.Children, documentDTOs[i])
+			}
+		} else {
+			rootDTOs = append(rootDTOs, documentDTOs[i])
+		}
+	}
+
+	return rootDTOs, total, err
 }
 
 func (s *DocumentService) GetDocumentsForWebsite(websiteID uuid.UUID) []models.DocumentDTO {

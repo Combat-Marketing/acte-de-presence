@@ -3,21 +3,16 @@ import { NextRequest, NextResponse } from 'next/server';
 // Define the URL of your documents service
 const DOCUMENTS_SERVICE_URL = process.env.DOCUMENTS_SERVICE_URL || 'http://localhost:8080';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { searchParams } = new URL(request.url);
-    const queryString = searchParams.toString();
-    
-    // Log the incoming request
-    console.log(`Proxying GET request to documents service: ${queryString}`);
-    
+
     // Forward the request to your documents service
-    const response = await fetch(`${DOCUMENTS_SERVICE_URL}/documents${queryString ? `?${queryString}` : ''}`, {
+    const response = await fetch(`${DOCUMENTS_SERVICE_URL}/documents`, {
       headers: {
         'Accept': 'application/json',
         // Forward authorization headers if present
-        ...request.headers.has('Authorization') ? { 
-          'Authorization': request.headers.get('Authorization') || '' 
+        ...request.headers.has('Authorization') ? {
+          'Authorization': request.headers.get('Authorization') || ''
         } : {}
       },
     });
@@ -30,7 +25,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error proxying request to documents service:', error);
     return NextResponse.json(
-      { error: 'Failed to connect to documents service' }, 
+      { error: 'Failed to connect to documents service' },
       { status: 500 }
     );
   }
@@ -39,10 +34,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Log the incoming request
     console.log('Proxying POST request to documents service');
-    
+
     // Forward the request to your documents service
     const response = await fetch(`${DOCUMENTS_SERVICE_URL}/documents`, {
       method: 'POST',
@@ -50,8 +45,8 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         // Forward authorization headers if present
-        ...request.headers.has('Authorization') ? { 
-          'Authorization': request.headers.get('Authorization') || '' 
+        ...request.headers.has('Authorization') ? {
+          'Authorization': request.headers.get('Authorization') || ''
         } : {}
       },
       body: JSON.stringify(body),
@@ -65,7 +60,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error proxying request to documents service:', error);
     return NextResponse.json(
-      { error: 'Failed to connect to documents service' }, 
+      { error: 'Failed to connect to documents service' },
       { status: 500 }
     );
   }
@@ -75,18 +70,18 @@ export async function DELETE(request: NextRequest) {
   try {
     const url = new URL(request.url);
     const id = url.pathname.split('/').pop();
-    
+
     // Log the incoming request
     console.log(`Proxying DELETE request to documents service for ID: ${id}`);
-    
+
     // Forward the request to your documents service
     const response = await fetch(`${DOCUMENTS_SERVICE_URL}/documents/${id}`, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
         // Forward authorization headers if present
-        ...request.headers.has('Authorization') ? { 
-          'Authorization': request.headers.get('Authorization') || '' 
+        ...request.headers.has('Authorization') ? {
+          'Authorization': request.headers.get('Authorization') || ''
         } : {}
       },
     });
@@ -104,7 +99,7 @@ export async function DELETE(request: NextRequest) {
   } catch (error) {
     console.error('Error proxying request to documents service:', error);
     return NextResponse.json(
-      { error: 'Failed to connect to documents service' }, 
+      { error: 'Failed to connect to documents service' },
       { status: 500 }
     );
   }
@@ -115,10 +110,10 @@ export async function PUT(request: NextRequest) {
     const url = new URL(request.url);
     const id = url.pathname.split('/').pop();
     const body = await request.json();
-    
+
     // Log the incoming request
     console.log(`Proxying PUT request to documents service for ID: ${id}`);
-    
+
     // Forward the request to your documents service
     const response = await fetch(`${DOCUMENTS_SERVICE_URL}/documents/${id}`, {
       method: 'PUT',
@@ -126,8 +121,8 @@ export async function PUT(request: NextRequest) {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         // Forward authorization headers if present
-        ...request.headers.has('Authorization') ? { 
-          'Authorization': request.headers.get('Authorization') || '' 
+        ...request.headers.has('Authorization') ? {
+          'Authorization': request.headers.get('Authorization') || ''
         } : {}
       },
       body: JSON.stringify(body),
@@ -141,7 +136,7 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error('Error proxying request to documents service:', error);
     return NextResponse.json(
-      { error: 'Failed to connect to documents service' }, 
+      { error: 'Failed to connect to documents service' },
       { status: 500 }
     );
   }

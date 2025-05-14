@@ -134,8 +134,8 @@ The service automatically attempts to apply any pending migrations on startup. T
 
 ## Planned
 - [ ] Data model setup for the different document types
-    - [ ] FOLDER
-    - [ ] PAGE
+    - [x] FOLDER
+    - [x] PAGE
     - [ ] LINK
     - [ ] SNIPPET
     - [ ] EMAIL

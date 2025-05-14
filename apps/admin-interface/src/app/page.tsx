@@ -77,18 +77,18 @@ export default function Dashboard() {
             </Accordion>
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={100 - leftPanelSize}>
-            <div className="p-6">
+          <ResizablePanel defaultSize={100 - leftPanelSize} className="h-[calc(100vh-80px)]">
+            <div className="p-6 overflow-y-auto h-full box-border">
               <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
               {selectedDocument ? (
-                <div>
-                  <h2 className="text-xl mb-2">{selectedDocument.key}</h2>
-                  <pre className="bg-muted p-4 rounded-md">
-                    {JSON.stringify(selectedDocument, null, 2)}
-                  </pre>
-                </div>
+              <div>
+                <h2 className="text-xl mb-2">{selectedDocument.key}</h2>
+                <pre className="bg-muted p-4 rounded-md">
+                {JSON.stringify(selectedDocument, null, 2)}
+                </pre>
+              </div>
               ) : (
-                <p className="text-muted-foreground">Select a document from the tree to view or edit.</p>
+              <p className="text-muted-foreground">Select a document from the tree to view or edit.</p>
               )}
             </div>
           </ResizablePanel>

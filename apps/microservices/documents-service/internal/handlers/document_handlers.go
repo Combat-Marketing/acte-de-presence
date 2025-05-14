@@ -69,7 +69,8 @@ func (h *DocumentHandler) GetDocuments(c *gin.Context) {
 
 // GetDocument handles GET /documents/:id
 func (h *DocumentHandler) GetDocument(c *gin.Context) {
-	id, err := uuid.FromBytes([]byte(c.Param("id")))
+	idStr := c.Param("id")
+	id, err := uuid.Parse(idStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid document ID"})
 		return

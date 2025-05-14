@@ -129,6 +129,7 @@ export interface Document {
   id: string;
   key: string;
   slug?: string;
+  index: number;
   type: string;
   parentId: string | null;
   path?: string;

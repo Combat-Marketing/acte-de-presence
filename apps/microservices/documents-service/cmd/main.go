@@ -110,12 +110,12 @@ func main() {
 	api := router.Group("/")
 	{
 		// Public routes
-		api.GET("/:id/download", func(c *gin.Context) {
-			// Implementation for downloading documents would go here
-			// This endpoint would serve the document file
-			c.JSON(http.StatusOK, gin.H{"message": "Download endpoint not yet implemented"})
-		})
 		api.GET("/", documentHandler.GetDocuments)
+
+		// Place more specific routes before the parameterized route
+		// (No changes needed for /config and /health since they are already defined above)
+
+		// Parameterized route should be last to avoid conflicts
 		api.GET("/:id", documentHandler.GetDocument)
 
 		// Protected routes
