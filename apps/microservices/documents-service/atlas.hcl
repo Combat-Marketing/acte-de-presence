@@ -19,6 +19,8 @@ env "development" {
       diff = "{{ sql . \"  \" }}"
     }
   }
+  schemas = ["public"]
+  exclude = ["atlas_schema_revisions"]
 }
 
 env "production" {
@@ -27,4 +29,6 @@ env "production" {
   migration {
     dir = "file://migrations"
   }
+  schemas = ["public"]
+  exclude = ["atlas_schema_revisions"]
 }

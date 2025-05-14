@@ -88,6 +88,13 @@ services:
     profiles:
       - migrations
     # Not started by default, only when explicitly invoked
+    # Add Go installation to the container
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        apk add --no-cache go && 
+        go version &&
+        /usr/bin/atlas "$@"
 
   # Keycloak service for authentication and authorization
   keycloak:

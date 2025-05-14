@@ -26,8 +26,9 @@ func (base *Base) BeforeCreate(tx *gorm.DB) error {
 // Document represents a document in the system
 type Website struct {
 	Base
-	Name            string           `json:"name" gorm:"not null"`
-	DomainName      string           `json:"domain_name" gorm:"not null"`
+	Name            string           `json:"name" gorm:"not null; unique"`
+	Description     *string          `json:"description" gorm:"default:NULL"`
+	DomainName      string           `json:"domain_name" gorm:"not null; unique"`
 	WebsiteSettings []WebsiteSetting `json:"website_settings" gorm:"foreignKey:WebsiteID"`
 }
 
